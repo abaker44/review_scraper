@@ -12,6 +12,9 @@ namespace mckaig_chevy_review
     {
        public WordLists()
         {
+            //these are the words lists used to deterime a reviews weight 
+            //make sure these are lower case 
+            //you can change these as you see fit
             PositiveWords = new Dictionary<string, int> {
                 { "fantastic", 4 },
                 { "great", 2 },
@@ -67,8 +70,5 @@ namespace mckaig_chevy_review
          public Dictionary<string, int> PositiveWords { get; }
          public Dictionary<string, int> NegativeWords { get; }
        
-        
-       
-
     }
 }
