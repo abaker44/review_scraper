@@ -14,7 +14,7 @@ namespace mckaig_chevy_review
         //This is the url that will take you to the review page, we just add "page1", "page2"...  to the end to get the additional pages
         const string reviewBaseURL = "http://www.dealerrater.com/dealer/McKaig-Chevrolet-Buick-A-Dealer-For-The-People-dealer-reviews-23685/";
         //This defines the numbers of pages you want scraped currently there are up to 120 
-        const int pagesToGet = 120;
+        const int pagesToGet = 5;
         //This defines how many reviews to print out
         const int reviewsToPrint = 3;
 
