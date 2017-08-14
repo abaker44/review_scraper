@@ -26,38 +26,55 @@ namespace mckaig_chevy_review
         public int ReviewWeight { get; set; }
 
 
-        //This Method calculates the "ReviewWeight" it 
-        //first counts the occurences of each word in the review and title
-        //second checks those words against a dictionary of positive and negative words defined in the WordLists Class
-        //third it takes the product of the assigned weight of the positive or negative word with the number of 
-        //occurences in the review
-        //fourth it add that product to the current weight 
-        //if the word is not found in the word list it adds 0 
-        private void CalculateReviewWeight()
+        
+        public void CalculateReviewWeight()
         {
-            //Intial weight of the review is the rating it recieved
-            int reviewWeight = Rating;
-            //this will hold the word from the review as a key and the number of occurences as the value
-            Dictionary<string, int> wordCount = new Dictionary<string, int> { };
-            //this intiates a new wordcount object
-            WordLists wordLists = new WordLists();
-
-            //This creates an array for every word in the reivew, and make each lower case
-            string review = ReviewBody.ToLower() + " " + ReviewTitle.ToLower();
+            //This gets array of each word in reviewBody
+            var wordArr = getArrayOfWords(ReviewBody);
+            //this gets the word count
+            Dictionary<string, int> wordCount = getWordCountOfArray(wordArr);
+            //this gets the review weight       
+            ReviewWeight = getReviewWeight(wordCount, Rating);
+        }
+        
+        
+        //This creates an array for every word in the reivew, and make each lower case
+        public string[] getArrayOfWords(string stringToSplit)
+        {
+            //makes everything in array lower case
+            string review = stringToSplit.ToLower();
+            //replaces apostrophes 
             string ratingString = Regex.Replace(review, @"[\']", "");
+          
             char[] delimiters = new[] { ',', ';', ' ', '.' };
+            //split the string up 
             var wordArr = review.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+            return wordArr;
+        }
 
-            for (int i = 0; i < wordArr.Length; i++)
+        //this counts the number of words in an array and puts the count as a value in a dictionary 
+        public Dictionary<string, int> getWordCountOfArray(string[] wordArray)
+        {
+            Dictionary<string, int> wordCount = new Dictionary<string, int> { };
+
+            for (int i = 0; i < wordArray.Length; i++)
             {
                 int currentCount;
-                //this checks if the word in the review is in the word count dictionary 
-                wordCount.TryGetValue(wordArr[i], out currentCount);
+                //this checks if the word in the review is in the word count array 
+                wordCount.TryGetValue(wordArray[i], out currentCount);
                 //if it is found it increments the count by one if it is not found it adds it to the dictionary 
-                wordCount[wordArr[i]] = currentCount + 1;
+                wordCount[wordArray[i]] = currentCount + 1;
             }
+            return wordCount;
+        }
 
-            foreach (var word in wordCount)
+        //this gets the weight of a review by running the words against a weighted dictionary of reviews 
+        public int getReviewWeight(Dictionary<string, int> wordCountDictionary, int intialWeight)
+        {
+            int reviewWeight = intialWeight;
+            //this intiates a new wordcount object
+            WordLists wordLists = new WordLists();
+            foreach (var word in wordCountDictionary)
             {
                 int currentCount;
                 //this checks if the word in the review matches a word in the positve dictionary 
@@ -69,7 +86,8 @@ namespace mckaig_chevy_review
                 reviewWeight += currentCount * word.Value;
             }
 
-            ReviewWeight = reviewWeight;
+           return reviewWeight;
         }
     }
+    
 }
