@@ -25,17 +25,20 @@ namespace mckaig_chevy_review
             //this is what is returned a list of review objects 
             List<Review> reviews = new List<Review> { };
             //using multithreading to increase parsing time 
-            Parallel.For(0, numberOfPages, i => {
-               
+            Parallel.For(1, numberOfPages + 1, i =>
+            {
+
+
                 //this is how to review page is retrived 
                 //IT IS DEPENDENT THAT THE URL SUPPLIED CAN HAVE "PAGEX" APPENED TO IT!!
                 HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
                 HtmlAgilityPack.HtmlDocument doc = web.Load(ReviewPageUrl + "page" + i);
                 //using xpath we retrieve the parent div of each review
                 var values = doc.DocumentNode.SelectNodes("//div[contains(@class, 'review-entry')]").ToList();
-              
 
-                    Parallel.ForEach(values, v =>
+
+                Parallel.ForEach(values, v =>
+                  
                     {
                     //for each review div we have to access other elements so we add an xpath the the parent div's xpath to get element
                     string reviewerName = doc.DocumentNode.SelectSingleNode(v.XPath + "//span[contains(@class, 'italic')]").InnerText;
